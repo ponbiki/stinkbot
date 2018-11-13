@@ -1,11 +1,11 @@
 from irc import *
 from time import sleep
 
-channels = ["#BitchBot", "#dungeoneers"]
+channels = ["#channel1", "#channel2"]
 server = "irc.7chan.org"
 port = 6697
-nickname = "goddammit"
-owner = "ponbiki!asdf@I.is.confused"
+nickname = "pthhp"
+owner = "nick!some@host.mask"
 
 irc = IRC()
 print(irc.connect(server, port))
