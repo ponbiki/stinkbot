@@ -25,4 +25,4 @@ while 1:
     if "PRIVMSG" in text and owner in text and "quit" in text:
         break
 
-irc.disconnect("Lick my balls!")
+irc.disconnect("Lick my @#$%!")
