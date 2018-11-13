@@ -9,7 +9,9 @@ class IRC:
         self.irc = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
 
     def send_msg(self, chan, out_msg):
-        self.irc.send(bytes(f"PRIVMSG {chan} {out_msg} \n", "UTF-8"))
+        o_msg = f"PRIVMSG {chan} {out_msg} \n"
+        print(f">>>>>> Sending: {o_msg}")
+        self.irc.send(bytes(o_msg, "UTF-8"))
 
     def get_msg(self):
         in_msg = self.irc.recv(2040).decode("UTF-8")
