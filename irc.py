@@ -10,8 +10,11 @@ class IRC:
 
     def send_msg(self, chan, out_msg):
         o_msg = f"PRIVMSG {chan} {out_msg} \n"
-        print(f">>>>>> Sending: {o_msg}")
         self.irc.send(bytes(o_msg, "UTF-8"))
+
+    def send_notice(self, chan, out_notice):
+        o_ntc = f"NOTICE {chan} :{out_notice} \n"
+        self.irc.send(bytes(o_ntc, "UTF-8"))
 
     def get_msg(self):
         in_msg = self.irc.recv(2040).decode("UTF-8")
@@ -22,27 +25,38 @@ class IRC:
         return in_msg
 
     def connect(self, server, port):
-        print(f">>>>>> Connecting to: {server}")
         self.irc.connect((server, port))
 
         return self.get_msg()
 
     def set_user(self, botnick):
-        print(f">>>>>> Setting user: {botnick}")
         self.irc.send(bytes(f"USER {botnick} {botnick} {botnick} :broken bot \n", "UTF-8"))
 
         return self.get_msg()
 
     def set_nick(self, botnick):
-        print(f">>>>>> Setting nick: {botnick}")
         self.irc.send(bytes(f"NICK {botnick} \n", "UTF-8"))
 
         return self.get_msg()
 
     def join(self, channel):
-        print(f">>>>>> Joining {channel}")
         self.irc.send(bytes(f"\n\n\n\nJOIN {channel} \n", "UTF-8"))
         return self.get_msg()
 
     def disconnect(self, q_msg):
-        self.irc.send(bytes(f"QUIT :{q_msg}\n", "UTF-8"))
+        self.irc.send(bytes(f"QUIT :{q_msg}\n\n", "UTF-8"))
+
+    def parse_msg(self, msg):
+        stripped = msg[1:].strip("\n")
+        expanded = stripped.split(":")
+        info = expanded[0].split()
+        txt = expanded[1].strip("\r")
+        return {
+            'chatter': info[0],
+            'msg_type': info[1],
+            'target': info[2],
+            'txt': txt
+        }
+
+    def __del__(self):
+        pass
