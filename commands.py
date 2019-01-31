@@ -1,7 +1,4 @@
-import re
-
 from random import randint
-from pprint import pprint
 
 
 class InvalidRollInput(Exception):
@@ -92,11 +89,7 @@ class Commands:
             if "#" in to_roll:
                 multi = to_roll.split("#")
                 broke = multi[1].split("d")
-                pprint(f"broke: {broke}")
                 broke[1], mod_amount, mod_operator = find_mod(broke[1])
-                pprint(f"broke[1]: {broke[1]}"
-                       f"mod_amount: {mod_amount}"
-                       f"mod_operator: {mod_operator}")
                 final = ""
                 for h, _ in enumerate(range(int(multi[0]))):
                     total = 0
