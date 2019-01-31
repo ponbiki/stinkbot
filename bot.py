@@ -3,7 +3,7 @@ from commands import *
 from time import sleep
 
 # Will probably read these variables out of a config file later
-channels = ["#BitchBot"]
+channels = ["#BitchBot"]#, "#dungeoneers"]
 server = "irc.7chan.org"
 port = 6697
 nickname = "dumbass"
@@ -37,22 +37,6 @@ def main():
                         Commands.h(irc, msg)
                     elif s_msg[0] == "r":
                         Commands.roller(irc, msg, s_msg[1])
-                        # from random import randint
-                        # from pprint import pprint
-                        # if "#" in s_msg[1]:
-                        #     multi = s_msg[1].split("#")
-                        #     pprint(multi)
-                        #     broke = multi[1].split("d")
-                        #     pprint(broke)
-                        # else:
-                        #     broke = s_msg[1].split("d") if "d" in s_msg[1] else [1, s_msg[1]]
-                        #     total = 0
-                        #     roll_list = []
-                        #     for die in range(int(broke[0])):
-                        #         roll = randint(1, int(broke[1]))
-                        #         roll_list.append(roll)
-                        #         total += roll
-                        #     irc.send_msg(msg['target'], f'{total} {roll_list}')
                     elif s_msg[0] == "sick":
                         irc.send_msg(msg['target'], "barf")
                     else:

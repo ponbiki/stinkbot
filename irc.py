@@ -46,7 +46,8 @@ class IRC:
     def disconnect(self, q_msg):
         self.irc.send(bytes(f"QUIT :{q_msg}\n\n", "UTF-8"))
 
-    def parse_msg(self, msg):
+    @staticmethod
+    def parse_msg(msg):
         stripped = msg[1:].strip("\n")
         expanded = stripped.split(":")
         info = expanded[0].split()
