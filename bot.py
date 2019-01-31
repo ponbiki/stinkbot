@@ -3,11 +3,11 @@ from commands import *
 from time import sleep
 
 # Will probably read these variables out of a config file later
-channels = ["#BitchBot"]#, "#dungeoneers"]
-server = "irc.7chan.org"
+channels = ["#channel1", "#channel2"]
+server = "irc.blah.org"
 port = 6697
 nickname = "dumbass"
-owner = "ponbiki!asdf@I.is.confused"
+owner = "nick!host@mask.here"
 command_char = "."
 
 
