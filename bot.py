@@ -40,8 +40,6 @@ def main():
                     elif s_msg[0] == "sick":
                         irc.send_msg(msg['target'], "barf")
                     elif s_msg[0] == "flip":
-                        import pdb
-                        pdb.set_trace()
                         Commands.flip(irc, msg)
                     else:
                         irc.send_msg(msg['target'], f"I don't understand the command \"{s_msg[0]}\"")
