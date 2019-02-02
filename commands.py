@@ -6,6 +6,13 @@ class InvalidRollInput(Exception):
 
 
 class Commands:
+    HEADS = "heads"
+    TAILS = "tails"
+
+    @staticmethod
+    def flip(conn, msg):
+        conn.send_msg(msg['target'], f"(ノಠ益ಠ)ノ彡┻━┻"
+                                     f"  {Commands.HEADS if randint(0, 1) == 0 else Commands.TAILS}")
 
     @staticmethod
     def h(conn, msg):
@@ -32,6 +39,7 @@ class Commands:
         :param to_roll: roll parameters (e.g. 2#1d20, number of totals and number of dice are optional)
         :return: None
         """
+
         to_roll = to_roll.lower()
 
         def roll(num):
@@ -106,7 +114,7 @@ class Commands:
                 mod_operator = None
                 mod_amount = None
 
-                conn.send_msg(msg['target'], f"{to_roll}: {final}")
+                conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, {to_roll}: {final}")
             else:
                 split_nums = to_roll.split("d") if "d" in to_roll else [1, to_roll]
                 total = 0
@@ -117,8 +125,10 @@ class Commands:
                     roll_list.append(res)
                     total += res
                 total, mod_amount, mod_operator = apply_mod(total)
-                conn.send_msg(msg['target'], f"{to_roll}={total} {roll_list}")
+                conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, {to_roll}: {total}"
+                                             f" [{to_roll}={', '.join(map(str, roll_list))}]")
 
         except Exception as e:
-            conn.send_msg(msg['target'], f"Sorry. I couldn't understand '{to_roll}'\n{e}")
+            conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
+                                         f"I couldn't understand \"{to_roll}\".")
 
