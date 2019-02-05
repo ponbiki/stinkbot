@@ -39,8 +39,6 @@ def main():
                         Commands.h(irc, msg)
                     elif s_msg[0] == "r":
                         Commands.roller(irc, msg, s_msg[1])
-                    elif s_msg[0] == "sick":
-                        irc.send_msg(msg['target'], "barf")
                     elif s_msg[0] == "flip":
                         Commands.flip(irc, msg)
                     else:
