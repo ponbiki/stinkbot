@@ -3,11 +3,11 @@ from commands import *
 from time import sleep
 
 # Will probably read these variables out of a config file later
-channels = ["#channel1", "#channel2"]
-server = "irc.blah.org"
+channels = ["#BitchBot", "#dungeoneers"]
+server = "irc.7chan.org"
 port = 6697
-nickname = "dumbass"
-owner = "nick!host@mask.here"
+nickname = "Quartz"
+owner = "ponbiki!asdf@I.is.confused"
 command_char = "."
 
 
@@ -30,6 +30,8 @@ def main():
                 if msg['txt'] == "quit":
                     irc.disconnect("Lick my @#$%!")
                     exit()
+                elif msg['txt'].split()[0].lower() == "nick":
+                    irc.nick(msg['txt'].split()[1])
             if msg['msg_type'] == "PRIVMSG":
                 if msg['txt'][0] == command_char:
                     s_msg = msg['txt'][1:].split()
