@@ -1,14 +1,19 @@
+import json
+
 from irc import *
 from commands import *
 from time import sleep
 
-# Will probably read these variables out of a config file later
-channels = ["#BitchBot", "#dungeoneers"]
-server = "irc.7chan.org"
-port = 6697
-nickname = "Quartz"
-owner = "ponbiki!asdf@I.is.confused"
-command_char = "."
+
+def conf_reader():
+    """
+
+    :return:
+    """
+    with open('config.json', 'r') as json_conf:
+        cfg = json.loads(json_conf)
+
+    return cfg
 
 
 def main():
@@ -16,13 +21,16 @@ def main():
     The main bot connection and run loop
     :return: None
     """
+    cfg = conf_reader()
+    b_cfg = cfg['bot_config']
+    cmd_char = b_cfg['cmd_char']
     irc = IRC()
-    irc.connect(server, port)
+    irc.connect(b_cfg['server'], b_cfg['port'])
     sleep(2)
-    irc.set_user(nickname)
-    irc.set_nick(nickname)
+    irc.set_user(b_cfg['bot_nick'])
+    irc.set_nick(b_cfg['bot_nick'])
     sleep(2)
-    for channel in channels:
+    for channel in b_cfg['channels']:
         irc.join(channel)
 
     while 1:
@@ -37,7 +45,7 @@ def main():
                 elif msg['txt'].split()[0].lower() == "nick":
                     irc.nick(msg['txt'].split()[1])
             if msg['msg_type'] == "PRIVMSG":
-                if msg['txt'][0] == command_char:
+                if msg['txt'][0] == cmd_char:
                     s_msg = msg['txt'][1:].split()
                     if s_msg[0] == "h":
                         Commands.h(irc, msg)

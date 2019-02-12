@@ -1,0 +1,10 @@
+{
+  "bot_config": {
+    "channels" : ["#Channel1", "#Channel2"],
+    "server": "irc.something.org",
+    "port": 6697,
+    "bot_nick": "Quartz",
+    "owner": "user!some@host.string",
+    "cmd_char": "."
+  }
+}
