@@ -12,6 +12,10 @@ command_char = "."
 
 
 def main():
+    """
+    The main bot connection and run loop
+    :return: None
+    """
     irc = IRC()
     irc.connect(server, port)
     sleep(2)

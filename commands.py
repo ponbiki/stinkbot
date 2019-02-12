@@ -11,6 +11,12 @@ class Commands:
 
     @staticmethod
     def flip(conn, msg):
+        """
+        Simple heads/tails coin flip function
+        :param conn: IRC connection instance
+        :param msg: dictionary of IRC message components
+        :return: None
+        """
         conn.send_msg(msg['target'], f"(ノಠ益ಠ)ノ彡┻━┻"
                                      f"  {Commands.HEADS if randint(0, 1) == 0 else Commands.TAILS}")
 
