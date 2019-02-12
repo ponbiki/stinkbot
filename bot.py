@@ -38,7 +38,7 @@ def main():
 
         if "PRIVMSG" in msg or "NOTICE" in msg:
             msg = irc.parse_msg(msg)
-            if msg['msg_type'] == "PRIVMSG" and msg['chatter'] == owner:
+            if msg['msg_type'] == "PRIVMSG" and msg['chatter'] == b_cfg['owner']:
                 if msg['txt'] == "quit":
                     irc.disconnect("Lick my @#$%!")
                     exit()
