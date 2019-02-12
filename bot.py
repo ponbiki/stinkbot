@@ -11,7 +11,7 @@ def conf_reader():
     :return:
     """
     with open('config.json', 'r') as json_conf:
-        cfg = json.loads(json_conf)
+        cfg = json.load(json_conf)
 
     return cfg
 
