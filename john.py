@@ -3,6 +3,10 @@ class John:
     players = 0
 
     def __init__(self, player_name):
+        """
+
+        :param player_name:
+        """
         self.voice = {
             'voice': player_name,
             'willpower': 0,

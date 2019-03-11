@@ -1,10 +1,10 @@
 {
   "bot_config": {
-    "channels" : ["#Channel1", "#Channel2"],
-    "server": "irc.something.org",
+    "channels" : ["#BitchBot", "#dungeoneers"],
+    "server": "irc.7chan.org",
     "port": 6697,
-    "bot_nick": "Quartz",
-    "owner": "user!some@host.string",
+    "bot_nick": "Quartzz",
+    "owner": "ponbiki!asdf@I.is.confused",
     "cmd_char": "."
   }
 }

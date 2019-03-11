@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 
 
 class InvalidRollInput(Exception):
@@ -8,6 +8,20 @@ class InvalidRollInput(Exception):
 class Commands:
     HEADS = "heads"
     TAILS = "tails"
+    DECK = [
+        "\x0301,00🂡", "\x0301,00🂢", "\x0301,00🂣", "\x0301,00🂤", "\x0301,00🂥",
+        "\x0301,00🂦", "\x0301,00🂧", "\x0301,00🂨", "\x0301,00🂩", "\x0301,00🂪",
+        "\x0301,00🂫", "\x0301,00🂬", "\x0301,00🂭", "\x0301,00🂮", "\x0301,00🃑",
+        "\x0301,00🃒", "\x0301,00🃓", "\x0301,00🃔", "\x0301,00🃕", "\x0301,00🃖",
+        "\x0301,00🃗", "\x0301,00🃘", "\x0301,00🃙", "\x0301,00🃚", "\x0301,00🃛",
+        "\x0301,00🃜", "\x0301,00🃝", "\x0301,00🃞", "\x0304,00🂱", "\x0304,00🂲",
+        "\x0304,00🂳", "\x0304,00🂴", "\x0304,00🂵", "\x0304,00🂶", "\x0304,00🂷",
+        "\x0304,00🂸", "\x0304,00🂹", "\x0304,00🂺", "\x0304,00🂻", "\x0304,00🂼",
+        "\x0304,00🂽", "\x0304,00🂾", "\x0304,00🃁", "\x0304,00🃂", "\x0304,00🃃",
+        "\x0304,00🃄", "\x0304,00🃅", "\x0304,00🃆", "\x0304,00🃇", "\x0304,00🃈",
+        "\x0304,00🃉", "\x0304,00🃊", "\x0304,00🃋", "\x0304,00🃌", "\x0304,00🃍",
+        "\x0304,00🃎", "\x0304,00🂿", "\x0301,00🂿"
+    ]
 
     @staticmethod
     def flip(conn, msg):
@@ -38,10 +52,11 @@ class Commands:
         conn.send_msg(msg['target'], "hh   hh")
 
     @staticmethod
-    def roller(conn, msg, to_roll):
+    def roller(conn, msg, to_roll):  # TODO: limit max dice
         """
         Dice roller functionality
         :param conn: IRC connection instance
+        :param msg: JSON string containing chat information
         :param to_roll: roll parameters (e.g. 2#1d20, number of totals and number of dice are optional)
         :return: None
         """
@@ -51,8 +66,8 @@ class Commands:
         def roll(num):
             try:
                 return randint(1, int(num))
-            except Exception as e:
-                raise InvalidRollInput(e)
+            except Exception as err:
+                raise InvalidRollInput(err)
 
         mod_operator = None
         mod_amount = None
@@ -134,7 +149,16 @@ class Commands:
                 conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, {to_roll}: {total}"
                                              f" [{to_roll}={', '.join(map(str, roll_list))}]")
 
-        except Exception as e:
+        except ValueError:
             conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
-                                         f"I couldn't understand \"{to_roll}\".")
+                                         f"I could not understand \"{to_roll}\".")
 
+    @staticmethod
+    def draw(conn, msg):
+        """
+
+        :param conn:
+        :param msg:
+        :return:
+        """
+        conn.send_msg(msg['target'], f"\x02{choice(Commands.DECK)}")

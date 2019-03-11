@@ -53,6 +53,8 @@ def main():
                         Commands.roller(irc, msg, s_msg[1])
                     elif s_msg[0] == "flip":
                         Commands.flip(irc, msg)
+                    elif s_msg[0] == "d":
+                        Commands.draw(irc, msg)
                     else:
                         irc.send_msg(msg['target'], f"I don't understand the command \"{s_msg[0]}\"")
 
