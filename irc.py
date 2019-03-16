@@ -52,7 +52,7 @@ class IRC:
     @staticmethod
     def parse_msg(msg):
         stripped = msg[1:].strip("\n")
-        expanded = stripped.split(":", 1)
+        expanded = stripped.split(" :", 1)
         info = expanded[0].split()
         txt = expanded[1].strip("\r")
         return {
