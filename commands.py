@@ -8,7 +8,7 @@ class InvalidRollInput(Exception):
 class Commands:
     HEADS = "heads"
     TAILS = "tails"
-    DECK_A = [
+    DECK_A = [  # Unused due to limited isocode support in some Windows versions
         "\x0301,00🂡", "\x0301,00🂢", "\x0301,00🂣", "\x0301,00🂤", "\x0301,00🂥",
         "\x0301,00🂦", "\x0301,00🂧", "\x0301,00🂨", "\x0301,00🂩", "\x0301,00🂪",
         "\x0301,00🂫", "\x0301,00🂬", "\x0301,00🂭", "\x0301,00🂮", "\x0301,00🃑",
@@ -66,22 +66,37 @@ class Commands:
         conn.send_msg(msg['target'], "hh   hh")
 
     @staticmethod
-    def roller(conn, msg, to_roll):  # TODO: limit max dice
+    def roller(conn, msg, to_roll, savage=False):  # TODO: limit max dice
         """
         Dice roller functionality
         :param conn: IRC connection instance
         :param msg: JSON string containing chat information
         :param to_roll: roll parameters (e.g. 2#1d20, number of totals and number of dice are optional)
+        :param savage: BOOL use "exploding dice" and wild die (default False)
         :return: None
         """
 
         to_roll = to_roll.lower()
 
-        def roll(num):
-            try:
-                return randint(1, int(num))
-            except Exception as err:
-                raise InvalidRollInput(err)
+        def roll(num, svg_roll=False):
+            if not svg_roll:
+                try:
+                    return randint(1, int(num))
+                except Exception as err:
+                    raise InvalidRollInput(err)
+            else:
+                try:
+                    sv_total = []
+                    r = randint(1, int(num))
+                    sv_total.append(r)
+                    sv_sum = r
+                    while sv_sum%int(num) == 0:
+                        r = randint(1, int(num))
+                        sv_total.append(r)
+                        sv_sum += r
+                    return sv_total
+                except Exception as err:
+                    raise InvalidRollInput(err)
 
         mod_operator = None
         mod_amount = None
@@ -128,44 +143,63 @@ class Commands:
             except Exception as e:
                 raise InvalidRollInput(e)
 
-        try:
-            if "#" in to_roll:
-                multi = to_roll.split("#")
-                broke = multi[1].split("d")
-                broke[1], mod_amount, mod_operator = find_mod(broke[1])
-                final = ""
-                for h, _ in enumerate(range(int(multi[0]))):
+        if not savage:  # standard RPG rolls
+            try:
+                if "#" in to_roll:
+                    multi = to_roll.split("#")
+                    broke = multi[1].split("d")
+                    broke[1], mod_amount, mod_operator = find_mod(broke[1])
+                    final = ""
+                    for h, _ in enumerate(range(int(multi[0]))):
+                        total = 0
+                        roll_list = []
+                        for _ in range(int(broke[0])):
+                            res = roll(int(broke[1]))
+                            roll_list.append(res)
+                            total += res
+                        total, _, _ = apply_mod(total)
+                        roll_list[0] = f"{multi[1]}={roll_list[0]}"
+                        final += f"{total} [{', '.join(map(str, roll_list))}]"
+                        if h != int(multi[0]) - 1:
+                            final += ", "
+                    mod_operator = None
+                    mod_amount = None
+
+                    conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, {to_roll}: {final}")
+                else:
+                    split_nums = to_roll.split("d") if "d" in to_roll else [1, to_roll]
                     total = 0
                     roll_list = []
-                    for _ in range(int(broke[0])):
-                        res = roll(int(broke[1]))
+                    split_nums[1], mod_amount, mod_operator = find_mod(split_nums[1])
+                    for _ in range(int(split_nums[0])):
+                        res = roll(split_nums[1])
                         roll_list.append(res)
                         total += res
-                    total, _, _ = apply_mod(total)
-                    roll_list[0] = f"{multi[1]}={roll_list[0]}"
-                    final += f"{total} [{', '.join(map(str, roll_list))}]"
-                    if h != int(multi[0]) - 1:
-                        final += ", "
-                mod_operator = None
-                mod_amount = None
+                    total, mod_amount, mod_operator = apply_mod(total)
+                    conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, {to_roll}: {total}"
+                                                 f" [{to_roll}={', '.join(map(str, roll_list))}]")
 
-                conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, {to_roll}: {final}")
-            else:
-                split_nums = to_roll.split("d") if "d" in to_roll else [1, to_roll]
-                total = 0
-                roll_list = []
-                split_nums[1], mod_amount, mod_operator = find_mod(split_nums[1])
-                for _ in range(int(split_nums[0])):
-                    res = roll(split_nums[1])
-                    roll_list.append(res)
-                    total += res
-                total, mod_amount, mod_operator = apply_mod(total)
-                conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, {to_roll}: {total}"
-                                             f" [{to_roll}={', '.join(map(str, roll_list))}]")
+            except ValueError:
+                conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
+                                             f"I could not understand \"{to_roll}\".")
+        else:  # SavageWorlds rolls
+            try:
+                to_roll, mod_amount, mod_operator = find_mod(to_roll)
+                main_res_list = roll(to_roll, svg_roll=True)
+                main_total = sum(main_res_list)
+                main_total, _, _ = apply_mod(main_total)
+                wild_res_list = roll(6, svg_roll=True)
+                wild_total = sum(wild_res_list)
+                conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, d{to_roll}"
+                                             f"{mod_operator if mod_operator else ''}"
+                                             f"{mod_amount if mod_amount else ''}:"
+                                             f" {main_total}, wild: {wild_total} || d{to_roll}"
+                                             f" [{', '.join(map(str, main_res_list))}], wild:"
+                                             f" [{', '.join(map(str, wild_res_list))}] ")
 
-        except ValueError:
-            conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
-                                         f"I could not understand \"{to_roll}\".")
+            except ValueError:
+                conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
+                                             f"I could not understand \"{to_roll}\".")
 
     @staticmethod
     def draw(conn, msg):

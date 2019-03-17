@@ -51,6 +51,8 @@ def main():
                         Commands.h(irc, msg)
                     elif s_msg[0] == "r":
                         Commands.roller(irc, msg, s_msg[1])
+                    elif s_msg[0] == "s":
+                        Commands.roller(irc, msg, s_msg[1], savage=True)
                     elif s_msg[0] == "flip":
                         Commands.flip(irc, msg)
                     elif s_msg[0] == "d":
