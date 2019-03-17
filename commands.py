@@ -1,4 +1,4 @@
-from random import randint, choice
+from random import randint, choice, shuffle
 
 
 class InvalidRollInput(Exception):
@@ -209,4 +209,14 @@ class Commands:
         :param msg:
         :return:
         """
-        conn.send_msg(msg['target'], f"\x02{choice(Commands.DECK)}")
+        split_msg = msg['txt'].split()
+        if len(split_msg) <= 1:
+            conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, \x02{choice(Commands.DECK)}")
+        else:
+            player_card_list = []
+            new_deck = Commands.DECK
+            split_msg.pop(0)
+            for i in range(len(split_msg)):
+                shuffle(new_deck)
+                player_card_list.append(f"{split_msg[i]}: {new_deck.pop()} \x0F")
+            conn.send_msg(msg['target'], f"{', '.join(map(str, player_card_list))}")
