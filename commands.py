@@ -90,7 +90,7 @@ class Commands:
                     r = randint(1, int(num))
                     sv_total.append(r)
                     sv_sum = r
-                    while sv_sum%int(num) == 0:
+                    while sv_sum % int(num) == 0:
                         r = randint(1, int(num))
                         sv_total.append(r)
                         sv_sum += r
