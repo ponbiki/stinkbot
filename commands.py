@@ -197,7 +197,7 @@ class Commands:
                                              f" [{', '.join(map(str, main_res_list))}], wild:"
                                              f" [{', '.join(map(str, wild_res_list))}] ")
 
-            except ValueError:
+            except InvalidRollInput:
                 conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
                                              f"I could not understand \"{to_roll}\".")
 
