@@ -47,6 +47,8 @@ def main():
             if msg['msg_type'] == "PRIVMSG":
                 if "thinking emoji" in msg['txt']:
                     irc.send_msg(msg['target'], "🤔")
+                elif "gay" in msg['txt']:
+                    irc.send_msg(msg['target'], "🏳️‍🌈")
                 if msg['txt'][0] == cmd_char:
                     s_msg = msg['txt'][1:].split()
                     if s_msg[0] == "h":
