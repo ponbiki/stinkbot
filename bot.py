@@ -62,9 +62,9 @@ def main():
                     s_msg = msg['txt'].lower()[1:].split()
                     if s_msg[0] == "h":
                         Commands.h(irc, msg)
-                    elif s_msg[0] == "r":
+                    elif s_msg[0] == "r" and len(s_msg) > 1:
                         Commands.roller(irc, msg, s_msg[1])
-                    elif s_msg[0] == "s":
+                    elif s_msg[0] == "s" and len(s_msg) > 1:
                         Commands.roller(irc, msg, s_msg[1], savage=True)
                     elif s_msg[0] == "flip":
                         Commands.flip(irc, msg)

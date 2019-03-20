@@ -148,8 +148,14 @@ class Commands:
             try:
                 if "#" in to_roll:
                     multi = to_roll.split("#")
+                    if int(multi[0]) > 500:
+                        conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
+                        return
                     broke = multi[1].split("d")
                     broke[1], mod_amount, mod_operator = find_mod(broke[1])
+                    if int(broke[0]) > 500 or int(broke[1]) > 10000:
+                        conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
+                        return
                     final = ""
                     for h, _ in enumerate(range(int(multi[0]))):
                         total = 0
@@ -172,6 +178,9 @@ class Commands:
                     total = 0
                     roll_list = []
                     split_nums[1], mod_amount, mod_operator = find_mod(split_nums[1])
+                    if int(split_nums[0]) > 500 or int(split_nums[1]) > 10000:
+                        conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
+                        return
                     for _ in range(int(split_nums[0])):
                         res = roll(split_nums[1])
                         roll_list.append(res)
@@ -184,8 +193,9 @@ class Commands:
                 conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
                                              f"I could not understand \"{to_roll}\".")
         else:  # SavageWorlds rolls
-            if to_roll <= 1:
+            if int(to_roll) <= 1 or int(to_roll) <= 10000:
                 conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on {to_roll}.")
+                return
             try:
                 to_roll, mod_amount, mod_operator = find_mod(to_roll)
                 main_res_list = roll(to_roll, svg_roll=True)
