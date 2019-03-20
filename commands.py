@@ -1,3 +1,4 @@
+import re
 from random import randint, choice, shuffle
 
 
@@ -204,19 +205,25 @@ class Commands:
     @staticmethod
     def draw(conn, msg):
         """
-
-        :param conn:
-        :param msg:
-        :return:
+        Draws playing cards
+        :param conn: IRC connection instance
+        :param msg: Number of cards to draw or players to draw a card for
+        :return: None
         """
         split_msg = msg['txt'].split()
         if len(split_msg) <= 1:
             conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, \x02{choice(Commands.DECK)}")
+        elif len(split_msg) == 2 and re.match(r'[0-9]', split_msg[1]):
+            num_cards = int(re.match(r'[0-9]', split_msg[1]).string)
+            new_deck = Commands.DECK
+            shuffle(new_deck)
+            joined_cards = ' \x0F, '.join(map(str, [i for i in new_deck[1:num_cards + 1]]))
+            conn.send_msg(msg['target'], f"{joined_cards}")
         else:
             player_card_list = []
             new_deck = Commands.DECK
+            shuffle(new_deck)
             split_msg.pop(0)
             for i in range(len(split_msg)):
-                shuffle(new_deck)
                 player_card_list.append(f"{split_msg[i]}: {new_deck.pop()} \x0F")
             conn.send_msg(msg['target'], f"{', '.join(map(str, player_card_list))}")
