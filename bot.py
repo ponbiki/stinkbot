@@ -39,9 +39,14 @@ def main():
         if "PRIVMSG" in msg or "NOTICE" in msg:
             msg = irc.parse_msg(msg)
             if msg['msg_type'] == "PRIVMSG" and msg['chatter'] == b_cfg['owner']:
-                if msg['txt'] == "quit":
-                    irc.disconnect("Lick my @#$%!")
-                    exit()
+                if msg['txt'].split()[0] == "quit":
+                    if len(msg['txt'].split()) > 1:
+                        print(" ".join(msg['txt'].split()[1:]))
+                        irc.disconnect(" ".join(msg['txt'].split()[1:]))
+                        exit()
+                    else:
+                        irc.disconnect()
+                        exit()
                 elif msg['txt'].split()[0].lower() == "nick":
                     irc.set_nick(msg['txt'].split()[1])
                 elif msg['txt'].split()[0].lower() == "join":

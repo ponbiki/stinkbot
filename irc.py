@@ -1,5 +1,6 @@
 import socket
 import ssl
+from time import sleep
 
 
 class IRC:
@@ -47,8 +48,8 @@ class IRC:
         self.irc.send(bytes(f"\n\n\n\nPART {channel} {part_msg if part_msg else 'Goodbye'}\n", "UTF-8"))
         return self.get_msg()
 
-    def disconnect(self, q_msg):
-        self.irc.send(bytes(f"QUIT :{q_msg}\n\n", "UTF-8"))
+    def disconnect(self, q_msg=None):
+        self.irc.send(bytes(f"QUIT :{q_msg if q_msg else 'Lick my @#$%!'}\n\n", "UTF-8"))
 
     @staticmethod
     def parse_msg(msg):
