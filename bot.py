@@ -43,7 +43,7 @@ def main():
                     irc.disconnect("Lick my @#$%!")
                     exit()
                 elif msg['txt'].split()[0].lower() == "nick":
-                    irc.nick(msg['txt'].split()[1])
+                    irc.set_nick(msg['txt'].split()[1])
             if msg['msg_type'] == "PRIVMSG":
                 if "thinking emoji" in msg['txt']:
                     irc.send_msg(msg['target'], "🤔")
