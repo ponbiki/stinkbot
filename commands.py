@@ -184,6 +184,8 @@ class Commands:
                 conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
                                              f"I could not understand \"{to_roll}\".")
         else:  # SavageWorlds rolls
+            if to_roll <= 1:
+                conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on {to_roll}.")
             try:
                 to_roll, mod_amount, mod_operator = find_mod(to_roll)
                 main_res_list = roll(to_roll, svg_roll=True)
