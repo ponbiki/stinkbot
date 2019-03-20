@@ -43,6 +43,10 @@ class IRC:
         self.irc.send(bytes(f"\n\n\n\nJOIN {channel} \n", "UTF-8"))
         return self.get_msg()
 
+    def part(self, channel, part_msg=None):
+        self.irc.send(bytes(f"\n\n\n\nPART {channel} {part_msg if part_msg else 'Goodbye'}\n", "UTF-8"))
+        return self.get_msg()
+
     def disconnect(self, q_msg):
         self.irc.send(bytes(f"QUIT :{q_msg}\n\n", "UTF-8"))
 

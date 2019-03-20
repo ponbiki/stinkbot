@@ -44,8 +44,14 @@ def main():
                     exit()
                 elif msg['txt'].split()[0].lower() == "nick":
                     irc.set_nick(msg['txt'].split()[1])
+                elif msg['txt'].split()[0].lower() == "join":
+                    irc.join(msg['txt'].split()[1])
+                elif msg['txt'].split()[0].lower() == "part":
+                    if len(msg['txt'].split()) > 2:
+                        irc.part(msg['txt'].split()[1], " ".join(msg['txt'].split()[2:]))
+                    irc.part(msg['txt'].split()[1])
             if msg['msg_type'] == "PRIVMSG":
-                if "thinking emoji" in msg['txt']:
+                if "thinking emoji" in msg['txt'].lower():
                     irc.send_msg(msg['target'], "🤔")
                 if msg['txt'][0] == cmd_char:
                     s_msg = msg['txt'][1:].split()
