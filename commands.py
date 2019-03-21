@@ -193,7 +193,7 @@ class Commands:
                 conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
                                              f"I could not understand \"{to_roll}\".")
         else:  # SavageWorlds rolls
-            if int(to_roll) <= 1 or int(to_roll) <= 10000:
+            if int(to_roll) <= 1 or int(to_roll) > 10000:
                 conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on {to_roll}.")
                 return
             try:
