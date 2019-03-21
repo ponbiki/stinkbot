@@ -225,7 +225,7 @@ class Commands:
         split_msg = msg['txt'].split()
         if len(split_msg) <= 1:
             conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, \x02{choice(Commands.DECK)}")
-        elif len(split_msg) == 2 and re.match(r'[0-9]', split_msg[1]):
+        elif len(split_msg) == 2 and not re.search(r'\D', split_msg[1]) and re.search(r'[0-9]', split_msg[1]):
             num_cards = int(re.match(r'[0-9]', split_msg[1]).string)
             new_deck = Commands.DECK
             shuffle(new_deck)
