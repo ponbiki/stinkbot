@@ -1,6 +1,6 @@
 import socket
 import ssl
-from time import sleep
+from pprint import pprint
 
 
 class IRC:
@@ -11,15 +11,17 @@ class IRC:
 
     def send_msg(self, chan, out_msg):
         o_msg = f"PRIVMSG {chan} {out_msg} \n"
+        pprint("OUT >>> " + o_msg)
         self.irc.send(bytes(o_msg, "UTF-8"))
 
     def send_notice(self, chan, out_notice):
         o_ntc = f"NOTICE {chan} :{out_notice} \n"
+        pprint("OUT >>> " + o_ntc)
         self.irc.send(bytes(o_ntc, "UTF-8"))
 
     def get_msg(self):
         in_msg = self.irc.recv(2040).decode("UTF-8")
-
+        pprint("IN >>> " + in_msg)
         if in_msg.find('PING') != -1:
             self.irc.send(bytes(f"PONG {in_msg.split()[1]} \r\n", "UTF-8"))
 
@@ -37,7 +39,6 @@ class IRC:
 
     def set_nick(self, botnick):
         self.irc.send(bytes(f"NICK {botnick} \n", "UTF-8"))
-
         return self.get_msg()
 
     def join(self, channel):
