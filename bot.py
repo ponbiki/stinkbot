@@ -58,7 +58,7 @@ def main():
             if msg['msg_type'] == "PRIVMSG":
                 if "thinking emoji" in msg['txt'].lower():
                     irc.send_msg(msg['target'], "🤔")
-                if msg['txt'][0] == cmd_char and len(msg['msg_type']) > 1:
+                if msg['txt'][0] == cmd_char and len(msg['txt']) > 1:
                     s_msg = msg['txt'].lower()[1:].split()
                     if s_msg[0] == "h":
                         Commands.h(irc, msg)
