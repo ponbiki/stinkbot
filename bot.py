@@ -72,8 +72,6 @@ def main():
                         Commands.draw(irc, msg)
                     elif s_msg[0] == "help":
                         irc.send_msg(msg['target'], f"Yeah...you do need help...")  # TODO: add real help
-                    else:
-                        irc.send_msg(msg['target'], f"I don't understand the command \"{s_msg[0]}\"")
 
 
 if __name__ == '__main__':
