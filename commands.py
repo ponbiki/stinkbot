@@ -83,8 +83,8 @@ class Commands:
             if not svg_roll:
                 try:
                     return randint(1, int(num))
-                except Exception as err:
-                    raise InvalidRollInput(err)
+                except Exception as e:
+                    raise InvalidRollInput(e)
             else:
                 try:
                     sv_total = []
@@ -96,8 +96,8 @@ class Commands:
                         sv_total.append(r)
                         sv_sum += r
                     return sv_total
-                except Exception as err:
-                    raise InvalidRollInput(err)
+                except Exception as e:
+                    raise InvalidRollInput(e)
 
         mod_operator = None
         mod_amount = None
@@ -122,8 +122,11 @@ class Commands:
                 elif "/" in num:
                     temp_num = num.split("/")
                     m_amount = temp_num.pop(1)
-                    m_operator = "/"
-                    return temp_num[0], m_amount, m_operator
+                    if m_amount == 0:
+                        raise InvalidRollInput("Div by 0")
+                    else:
+                        m_operator = "/"
+                        return temp_num[0], m_amount, m_operator
                 else:
                     return num, None, None
             except Exception as e:
@@ -189,7 +192,7 @@ class Commands:
                     conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, {to_roll}: {total}"
                                                  f" [{to_roll}={', '.join(map(str, roll_list))}]")
 
-            except ValueError:
+            except (ValueError, InvalidRollInput):
                 conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
                                              f"I could not understand \"{to_roll}\".")
         else:  # SavageWorlds rolls
@@ -197,7 +200,7 @@ class Commands:
                 to_roll, mod_amount, mod_operator = find_mod(to_roll)
                 try:
                     to_roll = int(to_roll)
-                except ValueError:
+                except (ValueError, InvalidRollInput):
                     conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
                                                  f"I could not understand \"{to_roll}\".")
                     return
@@ -216,7 +219,7 @@ class Commands:
                                              f" [{', '.join(map(str, main_res_list))}], wild:"
                                              f" [{', '.join(map(str, wild_res_list))}] ")
 
-            except InvalidRollInput:
+            except (ValueError, InvalidRollInput):
                 conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
                                              f"I could not understand \"{to_roll}\".")
 
