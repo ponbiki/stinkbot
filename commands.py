@@ -212,6 +212,7 @@ class Commands:
                 main_total, _, _ = apply_mod(main_total)
                 wild_res_list = roll(6, svg_roll=True)
                 wild_total = sum(wild_res_list)
+                wild_total, _, _ = apply_mod(wild_total)
                 conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, d{to_roll}"
                                              f"{mod_operator if mod_operator else ''}"
                                              f"{mod_amount if mod_amount else ''}:"
