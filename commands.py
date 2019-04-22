@@ -170,6 +170,9 @@ class Commands:
                             res = roll(int(broke[1]))
                             roll_list.append(res)
                             total += res
+                        if len(roll_list) < 1:
+                            conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
+                            return
                         total, _, _ = apply_mod(total)
                         roll_list[0] = f"{multi[1]}={roll_list[0]}"
                         final += f"{total} [{', '.join(map(str, roll_list))}]"
