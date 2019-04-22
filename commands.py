@@ -155,6 +155,9 @@ class Commands:
                         conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
                         return
                     broke = multi[1].split("d")
+                    if len(broke) <= 1:
+                        conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
+                        return
                     broke[1], mod_amount, mod_operator = find_mod(broke[1])
                     if int(broke[0]) > 500 or int(broke[1]) > 10000:
                         conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
