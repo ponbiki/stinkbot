@@ -159,7 +159,7 @@ class Commands:
                         conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
                         return
                     broke[1], mod_amount, mod_operator = find_mod(broke[1])
-                    if int(broke[0]) > 500 or int(broke[1]) > 10000:
+                    if int(broke[0]) > 500 or int(broke[1]) > 100000:
                         conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
                         return
                     final = ""
@@ -187,7 +187,7 @@ class Commands:
                     total = 0
                     roll_list = []
                     split_nums[1], mod_amount, mod_operator = find_mod(split_nums[1])
-                    if int(split_nums[0]) > 500 or int(split_nums[1]) > 10000:
+                    if int(split_nums[0]) > 500 or int(split_nums[1]) > 100000:
                         conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
                         return
                     for _ in range(int(split_nums[0])):
@@ -210,7 +210,7 @@ class Commands:
                     conn.send_msg(msg['target'], f"Sorry, {msg['chatter'].split('!')[0]}. "
                                                  f"I could not understand \"{to_roll}\".")
                     return
-                if int(to_roll) <= 1 or int(to_roll) > 10000:
+                if int(to_roll) <= 1 or int(to_roll) > 100000:
                     conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on {to_roll}.")
                     return
                 main_res_list = roll(to_roll, svg_roll=True)
