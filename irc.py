@@ -8,7 +8,7 @@ class IRC:
 
     def __init__(self):
         self.irc = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-        self.myname = '';  # set later
+        self.myname = ''  # set later
 
     def send_msg(self, chan, out_msg):
         o_msg = f"PRIVMSG {chan} {out_msg} \n"
@@ -61,8 +61,7 @@ class IRC:
         info = expanded[0].split()
         txt = expanded[1].strip("\r")
 
-        sender = info[0].split('@', 1)[0]   # discard host
-        sender = sender.split('!', 1)[0]    # discard email-username
+        sender = info[0].split('!', 1)[0]    # discard email-username, host
         if self.myname.lower() == info[2].lower():
             target = sender
         else:
