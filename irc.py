@@ -8,6 +8,7 @@ class IRC:
 
     def __init__(self):
         self.irc = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+        self.myname = '';  # set later
 
     def send_msg(self, chan, out_msg):
         o_msg = f"PRIVMSG {chan} {out_msg} \n"
@@ -39,6 +40,7 @@ class IRC:
 
     def set_nick(self, botnick):
         self.irc.send(bytes(f"NICK {botnick} \n", "UTF-8"))
+        self.myname = botnick
         return self.get_msg()
 
     def join(self, channel):
@@ -52,16 +54,24 @@ class IRC:
     def disconnect(self, q_msg=None):
         self.irc.send(bytes(f"QUIT :{q_msg if q_msg else 'Lick my @#$%!'}\n\n", "UTF-8"))
 
-    @staticmethod
-    def parse_msg(msg):
+    # no longer static. needs self.myname
+    def parse_msg(self, msg):
         stripped = msg[1:].strip("\n")
         expanded = stripped.split(" :", 1)
         info = expanded[0].split()
         txt = expanded[1].strip("\r")
+
+        sender = info[0].split('@', 1)[0]   # discard host
+        sender = sender.split('!', 1)[0]    # discard email-username
+        if self.myname.lower() == info[2].lower():
+            target = sender
+        else:
+            target = info[2]
+
         return {
             'chatter': info[0],
             'msg_type': info[1],
-            'target': info[2],
+            'target': target,
             'txt': txt
         }
 
