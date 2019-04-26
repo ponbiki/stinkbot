@@ -11,9 +11,22 @@ class IRC:
         self.myname = ''  # set later
 
     def send_msg(self, chan, out_msg):
-        o_msg = f"PRIVMSG {chan} {out_msg} \n"
-        pprint("OUT >>> " + o_msg)
-        self.irc.send(bytes(o_msg, "UTF-8"))
+        o_head = f"PRIVMSG {chan} "
+        msg = out_msg
+        #pprint("INDEX OF R N: {ind}".format(ind = msg.find('\r\n')))
+        while msg:
+            maxl = 200  # not robust since utf8 is variable length! UNICOOODE!
+            if len(msg) < maxl:
+                msgchunk = msg
+                msg = ''
+            else:
+                spindex = msg.rfind(" ", 0, maxl)
+                msgchunk = msg[:spindex]
+                msg = msg[spindex+1:]
+
+            o_msg = f"PRIVMSG {chan} {msgchunk} \n"
+            pprint("OUT >>> " + o_msg)
+            self.irc.send(bytes(o_msg, "UTF-8"))
 
     def send_notice(self, chan, out_notice):
         o_ntc = f"NOTICE {chan} :{out_notice} \n"
