@@ -34,8 +34,12 @@ class IRC:
         self.irc.send(bytes(o_ntc, "UTF-8"))
 
     def get_msg(self):
-        in_msg = self.irc.recv(2040).decode("UTF-8")
-        pprint("IN >>> " + in_msg)
+        try:
+            in_msg = self.irc.recv(2040).decode("UTF-8")
+            pprint("IN >>> " + in_msg)
+        except Exception as e:
+            print(f"Caught exception: {e}")
+            in_msg = "Hmmm?"
         if in_msg.find('PING') != -1:
             self.irc.send(bytes(f"PONG {in_msg.split()[1]} \r\n", "UTF-8"))
 
