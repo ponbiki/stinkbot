@@ -159,25 +159,45 @@ class Commands:
                         conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
                         return
                     broke[1], mod_amount, mod_operator = find_mod(broke[1])
-                    if int(broke[0]) > 500 or int(broke[1]) > 100000:
+
+                    # 4d6h3
+                    # hilo = (DiceSides, OnlyThisManyDiceCounted, LowestOrHighest [-1|1])
+                    hilo = broke[1].split("l")
+                    if len(hilo) > 1:
+                        hilo.append(-1)
+                    else:
+                        hilo = broke[1].split("h")
+                        if len(hilo) > 1:
+                            hilo.append(1)
+                        else:
+                            hilo.append(broke[0])
+                    if hilo[1] > broke[0]:
+                        hilo[1] = broke[0]
+
+                    if int(broke[0]) > 500 or int(hilo[0]) > 100000:
                         conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
                         return
                     final = ""
+
                     for h, _ in enumerate(range(int(multi[0]))):
                         total = 0
                         roll_list = []
                         for _ in range(int(broke[0])):
-                            res = roll(int(broke[1]))
+                            res = roll(int(hilo[0]))
                             roll_list.append(res)
-                            total += res
                         if len(roll_list) < 1:
                             conn.send_msg(msg['target'], f"Nice try, pal. I'm not gonna explode on that.")
                             return
+                        if len(hilo) > 2 and int(hilo[1]) < int(broke[0]):
+                            roll_list.sort(reverse = hilo[2] > 0)
+                        for _ in range(int(hilo[1])):
+                            total += roll_list[_]
                         total, _, _ = apply_mod(total)
                         roll_list[0] = f"{multi[1]}={roll_list[0]}"
                         final += f"{total} [{', '.join(map(str, roll_list))}]"
                         if h != int(multi[0]) - 1:
                             final += ", "
+
                     mod_operator = None
                     mod_amount = None
 
@@ -238,6 +258,7 @@ class Commands:
         :param msg: Number of cards to draw or players to draw a card for
         :return: None
         """
+
         split_msg = msg['txt'].split()
         if len(split_msg) <= 1:
             conn.send_msg(msg['target'], f"{msg['chatter'].split('!')[0]}, {choice(Commands.DECK)}")
